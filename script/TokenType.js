@@ -1,4 +1,6 @@
-TokenType = 
+export {TokenType};
+
+const TokenType =
 {
     //MAIN
     PROGRAM         : 1,
@@ -69,5 +71,3 @@ TokenType =
     FLOAT_CONST     : 551,
     CHAR_CONST      : 552
 }
-
-export { TokenType };

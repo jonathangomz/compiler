@@ -1,22 +1,26 @@
-import { TokenType } from 'TokenType.js';
-export { Token, TokenType }
+import {TokenType} from './TokenType.js';
+export default function Token(txt, ty) {
+    const text = txt;
+    const type = ty;
 
-var Token = class
-{   
-    constructor()
-    {
-        this.Type = TokenType.TOKEN_NONE;
-        this.Text = "not assigned";
+    return Object.freeze({
+        empty,
+        getText,
+        getType,
+        setText,
+        setType,
+    })
+
+    function empty () {
+        text = "not assigned";
+        type = TokenType.TOKEN_NONE;
     }
 
-    create(t, text) {
-        this.Text = text;
-        this.Type = t;
+    function getText () {
+        return text;
     }
 
-    get Text(){ return this.Text}
-    set Text(text){ this.Text = text}
-
-    get Type(){ return this.Text }
-    set Type(t){ this.Type = t}
+    function getType (ty) {
+        type = ty;
+    }
 }

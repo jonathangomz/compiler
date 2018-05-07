@@ -5,19 +5,21 @@
     src="https://code.jquery.com/jquery-3.3.1.min.js"
     integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
-  <script 
-    type="module"
-    src="script/TokenType.js"></script>
   <title>Document</title>
 </head>
 <body>
   <input type="button" name="btn" id="btn" value="Test">
 </body>
-<script type="text/javascript">
+<script type="module">
+  import {TokenType} from './script/TokenType.js';
+  import Token from './script/Token.js';
+  const type = TokenType.SUM;
+  const txt = "not assigned"
+  const tok = Token(txt, type);
+
   $(document).ready(function(){
     $('#btn').click(function(){
-      let t = TokenType;
-      alert(t.SUM);
+      alert(tok.getText());
     });
   });
 </script>
