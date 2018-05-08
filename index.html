@@ -1,25 +1,83 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <script
+  <title>Document</title>
+  <link 
+    rel="stylesheet" 
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" 
+    integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" 
+    crossorigin="anonymous">
+    <style>
+        .container{
+          padding: 40px 10px;
+        }
+        #buttons{
+          display: flex;
+        }
+        #buttons button{
+          margin: 10px 20px;
+        }
+        #result{
+          text-align: center;
+          float: none;
+          margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+        <div class="input-grou col-sm-8">
+          <textarea class="form-control" aria-label="With textarea" id="textfield"></textarea>
+        </div>
+        <div class="col-sm-4" id="buttons">
+          <button type="button" id="check" class="btn btn-info">Check</button>
+          <button type="button" id="reset" class="btn btn-secondary">Reset</button>
+        </div>
+        <div id="result" class="col-md-2 col-md-offset-5">
+        </div>
+      </div>
+  </div>
+</body>
+<script
     src="https://code.jquery.com/jquery-3.3.1.min.js"
     integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
-  <title>Document</title>
-</head>
-<body>
-  <input type="button" name="btn" id="btn" value="Test">
-</body>
 <script type="module">
+
   import {TokenType} from './script/TokenType.js';
   import Token from './script/Token.js';
-  const type = TokenType.SUM;
-  const txt = "not assigned"
-  const tok = Token(txt, type);
+  import Lexer from './script/Lexer.js';
+
+  let tok = undefined;
+  let lex = Lexer("abc+(b-c)");
+  let listTokens = undefined; 
 
   $(document).ready(function(){
-    $('#btn').click(function(){
-      alert(tok.getText());
+    $('#check').click(function(){
+        tok = lex.nextToken();
+        alert(tok.getType());
+    });
+    $('#reset').click(function(){
+        lex.reboot();
+    });
+    $('#textfield').change(function(){
+      let val = document.getElementById('textfield').value;
+      if(val.length > 0){
+        lex = Lexer(val);
+        listTokens = lex.listOfTokens();
+        let str = `<tr>
+                    <th>#</th>
+                    <th>Text</th>
+                    <th>Type</th>
+                  </tr>`;
+        let i = 0;
+        listTokens.forEach(function(t){
+          str += "<tr><td>"+(++i)+"</td><td>"+t.getText()+"</td><td>"+t.getType()+"</td></tr>";
+        });
+        $('#result').find('table').text("");
+        $('#result').add('table').addClass("table table-sm").append(str);
+      }
     });
   });
 </script>

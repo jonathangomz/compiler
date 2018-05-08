@@ -1,14 +1,12 @@
 import {TokenType} from './TokenType.js';
-export default function Token(txt, ty) {
-    const text = txt;
+export default function Token(ty, txt) {
     const type = ty;
+    const text = txt;
 
     return Object.freeze({
         empty,
         getText,
         getType,
-        setText,
-        setType,
     })
 
     function empty () {
@@ -20,7 +18,7 @@ export default function Token(txt, ty) {
         return text;
     }
 
-    function getType (ty) {
-        type = ty;
+    function getType () {
+        return type;
     }
 }
