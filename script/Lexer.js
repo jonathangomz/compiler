@@ -62,22 +62,22 @@ export default function Lexer(foobar) {
                 return Token(TokenType.SUM, input.substring(index, ++index));
             // **RESTA**
             if (edo == 0 && c == '-')
-                return new Token(TokenType.RES, input.substring(index, ++index));
+                return Token(TokenType.RES, input.substring(index, ++index));
             // **DIVISIÓN**
             if (edo == 0 && c == '/')
-                return new Token(TokenType.DIV, input.substring(index, ++index));
+                return Token(TokenType.DIV, input.substring(index, ++index));
             // **MULTIPLICACIÓN**
             if (edo == 0 && c == '*')
-                return new Token(TokenType.MUL, input.substring(index, ++index));
+                return Token(TokenType.MUL, input.substring(index, ++index));
             // **MÓDULO**
             if(edo == 0 &&  c == '%')
-                return new Token(TokenType.MOD, input.substring(index, ++index));
+                return Token(TokenType.MOD, input.substring(index, ++index));
             // **POTENCIA**
             if(edo == 0 && c == '^')
-                return new Token(TokenType.POT, input.substring(index, ++index));
+                return Token(TokenType.POT, input.substring(index, ++index));
             // **PUNTO Y COMA
             if (edo == 0 && c == ';')
-                return new Token(TokenType.SEMICOLON, input.substring(index, ++index));
+                return Token(TokenType.SEMICOLON, input.substring(index, ++index));
             // **IGUAL O ASIGNACIÓN**
             if(edo == 0 && c == '=')
             {
@@ -88,16 +88,16 @@ export default function Lexer(foobar) {
             if(edo == 1 && c != '=')
             {
                 edo = 0;
-                text = input.Substring(index, i - index).trim();
+                text = input.substring(index, i - index).trim();
                 index = i;
                 tokenType = TokenType.ASIGNA;
-                return new Token(tokenType, text);
+                return Token(tokenType, text);
             }
             // *IGUAL
             if (edo == 1 && c == '=')
             {
                 edo = 0;
-                return new Token(TokenType.EQUAL, input.substring(index, ++index));
+                return Token(TokenType.EQUAL, input.substring(index, ++index));
             }
             // **MENOR, MAYOR O DIFERENTE**
             if (edo == 0 && (c == '<' || c == '>' || c == '!'))
@@ -114,71 +114,71 @@ export default function Lexer(foobar) {
             if (edo == 2.1 && c != '=')
             {
                 edo = 0;
-                return new Token(TokenType.LESS, input.Substring(index-1, ++index - i));
+                return Token(TokenType.LESS, input.substring(index-1, ++index - i));
             }
             // *MENOR O IGUAL
             if (edo == 2.1 && c == '=')
             {
                 i++;
                 edo = 0;
-                text = input.Substring(index, i - index).trim();
+                text = input.substring(index, i - index).trim();
                 index = i;
                 tokenType = TokenType.LESS_EQUAL;
-                return new Token(tokenType, text);
+                return Token(tokenType, text);
             }
             // *MAYOR
             if (edo == 2.2 && c != '=')
             {
                 edo = 0;
-                return new Token(TokenType.GREATER, input.substring(index, ++index));
+                return Token(TokenType.GREATER, input.substring(index, ++index));
             }
             // MAYOR O IGUAL
             if (edo == 2.2 && c == '=')
             {
                 i++;
                 edo = 0;
-                text = input.Substring(index, i - index).trim();
+                text = input.substring(index, i - index).trim();
                 index = i;
                 tokenType = TokenType.GREATER_EQUAL;
-                return new Token(tokenType, text);
+                return Token(tokenType, text);
             }
             // *NEGACIÓN
             if (edo == 2.3 && c != '=')
             {
                 edo = 0;
-                return new Token(TokenType.NOT, input.substring(index, ++index));
+                return Token(TokenType.NOT, input.substring(index, ++index));
             }
             // *DIFERENTE
             if (edo == 2.3 && c == '=')
             {
                 i++;
                 edo = 0;
-                text = input.Substring(index, i - index).trim();
+                text = input.substring(index, i - index).trim();
                 index = i;
                 tokenType = TokenType.NOT_EQUAL;
-                return new Token(tokenType, text);
+                return Token(tokenType, text);
             }
             // **PARÉNTESIS DE APERTURA**
             if (edo == 0 && c == '(')
-                return new Token(TokenType.PARA, input.substring(index, ++index));
+                return Token(TokenType.PARA, input.substring(index, ++index));
             // **PARÉNTESIS DE CIERRE**
             if (edo == 0 && c == ')')
-                return new Token(TokenType.PARC, input.substring(index, ++index));
+                return Token(TokenType.PARC, input.substring(index, ++index));
             // **LLAVE DE APERTURA**
             if(edo == 0 && c == '{')
-                return new Token(TokenType.LLAVEA, input.substring(index, ++index));
+                return Token(TokenType.LLAVEA, input.substring(index, ++index));
             // **LLAVE DE CIERRE
             if (edo == 0 && c == '}')
-                return new Token(TokenType.LLAVEC, input.substring(index, ++index));
+                return Token(TokenType.LLAVEC, input.substring(index, ++index));
             // **CORCHETE DE APERTURA**
             if (edo == 0 && c == '[')
-                return new Token(TokenType.CORCHETEA, input.substring(index, ++index));
+                return Token(TokenType.CORCHETEA, input.substring(index, ++index));
             // **CORCHETE DE CIERRE
             if (edo == 0 && c == ']')
-                return new Token(TokenType.CORCHETEC, input.substring(index, ++index));
+                return Token(TokenType.CORCHETEC, input.substring(index, ++index));
             // **COMA**
             if (edo == 0 && c == ',')
-                return new Token(TokenType.COMA, input.substring(index, ++index));
+                return Token(TokenType.COMA, input.substring(index, ++index));
             // **STRING**
             if((edo == 0 && c == '"') || (edo == 10 && c != '"'))
             {
@@ -189,9 +189,9 @@ export default function Lexer(foobar) {
             {
                 i++;
                 edo = 0;
-                text = input.Substring(index, i - index).trim();
+                text = input.substring(index, i - index).trim();
                 index = i;
-                return new Token(TokenType.CHAR_CONST, text);
+                return Token(TokenType.CHAR_CONST, text);
             }
             // **ID**
             // Si es un ID y está al final de la línea
