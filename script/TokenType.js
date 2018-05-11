@@ -1,6 +1,4 @@
-export {TokenType};
-
-const TokenType =
+export const TokenType =
 {
     //MAIN
     PROGRAM         : 1,

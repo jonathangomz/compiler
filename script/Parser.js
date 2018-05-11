@@ -1,15 +1,25 @@
-internal class Parser: Lexer
-{
-    bool advance    = true;         // Para llevar un control del avance de los tokens a analizar
-    Token tok       = new Token();
-    Stack<Token> PAR = new Stack<Token>();
+import Lexer from './Lexer.js';
+import Token from './Token.js';
+import {Add, Mul, Trigonometry} from './Math.js';
 
-/* 
-         * * Constructores 
- */
-    public Parser()
-    {
-    }
+import {reservedWords} from './main.js';
+
+export default function Parser(input)
+{
+    const lex = Lexer(input);
+    const para = [];
+    let advs = true;         // Para llevar un control del avance de los tokens a analizar
+    let tok = Token();
+
+    return Object.freeze({
+        tester,
+        expression,
+        termino,
+        factor,
+        par,
+        advanceReturn,
+        advance
+    });
 
 /*
          * * THE TESTER METHOD
@@ -17,75 +27,141 @@ internal class Parser: Lexer
  * Description: This method is used to test all the program
  *              just is necessary change the method inside. 
  */
-    public float Tester()
+    function tester()
     {
-        tok = NextToken(); // Por mientras **
-        return Inicio();
+        tok = lex.nextToken(); // Por mientras **
+        return expression();
     }
     
  /* Métodos de la Clase */
-    public float Expression() //=> Arreglar lo de paréntesis de clausura
+    function expression() //=> Arreglar lo de paréntesis de clausura
     {
+      let r1 = undefined;
         do
         {
-            Termino();
-            if (advance)
-                Advance(false);
-            if (tok.Type == TokenType.SUM || tok.Type == TokenType.RES)
-                Advance(true);
-        } while(advance);
+            if(r1==undefined)
+              r1 = termino();
+            if (advs)
+              advance(false);
+            if (tok.getType() == 3 || tok.getType() == 6){ //Suma y resta
+                const tokTemp = tok;
+                advance(false);
+                let r2 = factor();
+                r1 = Add(tokTemp, r1, r2);
+            }
+        } while(advs);
         // El primer método debe de llevar esto al final**
-        if (tok.Type != TokenType.EOL && PAR.Count == 0)
-            throw new ParserException(string.Format("Error al final de la línea "+errorToken, tok.Text, tok.Type));
+        if (tok.getType() != 80 && para.length == 0)
+            throw "Error al final de la línea '"+tok.getText()+"' => {"+tok.getType()+"}";
         else
-            return 1;
+            return r1;
     }
 
-    public float Termino()
+    function termino()
     {
+        let r1 = undefined;
         do
         {
-            Factor();
-            if (advance)
-                Advance(false);
-            if (tok.Type == TokenType.MUL || tok.Type == TokenType.DIV)
-                Advance(true);
-        } while (advance);
-        return 1;
+            if(r1==undefined)
+              r1 = factor();
+            if (advs)
+                advance(false);
+            if (tok.getType() == 2 || tok.getType() == 5){ //Multiplicación y división
+                const tokTemp = tok;
+                advance(false);
+                let r2 = factor();
+                r1 = Mul(tokTemp, r1, r2)
+            }
+        } while (advs);
+        return r1;
     }
 
-    public float Factor()
+    function factor()
     {
-
-        if (tok.Type == TokenType.ID) // Si es ID
-            return Advance(1);
-        if (tok.Type == TokenType.NUM) // Si es NUM
-            return Advance(1);
-        if (tok.Type == TokenType.PARA)
-            return Par();
+        if (tok.getType() == 10) // Si es ID
+          return advanceReturn(1);
+        if (constante()) // Si es NUM
+          return tok.getText();
+        if (tok.getType() == 60 || tok.getType() == 61){ // Si es un paréntesis
+          let tokTemp = tok;
+          advance(true);
+          if(tok.getType() == 12){
+            let rs = checkOp(tokTemp, par())
+            return rs;
+          }else
+            throw "Se esperaba PARA, se obtuvo '"+tok.getText()+"' => {"+tok.getType()+"}";
+        }
+        if (tok.getType() == 12) // Si es un paréntesis
+          return par();
         else
-            throw new ParserException(string.Format("Se esperaba ID || NUM se obtuvo " + errorToken, tok.Text, tok.Type));
+          throw "Se esperaba ID || NUM se obtuvo '"+tok.getText()+"' => {"+tok.getType()+"}";
     }
 
-    public float Advance(byte i)
+    function checkOp(op, val){
+      if (op.getType() == 60){
+        return Trigonometry().sin(val);
+      }else if(op.getType() == 61){
+        return Trigonometry().cos(val);
+      }else
+        return null;
+    }
+
+    function constante()
+    {
+        if (tok.getType() == 550 ||
+            tok.getType() == 551 ||
+            tok.getType() == 552)
+        {
+            advanceReturn(1);
+            return true;
+        }
+        else
+            return false;
+    }
+
+    function par()
+    {
+        /*
+         *  Check Paréntesis 
+         */
+        para.push(tok);
+        advance(false);
+        var rs = expression();
+        if (tok.getType() == 13) // Deberá tener paréntesis de cierre
+        {
+            para.pop();
+            advance(false);
+            if (tok.getType() == 12) //Si encuentra otro paréntesis
+            {
+                par();
+            }
+            return rs;
+        }
+        else
+        {
+            throw "Se esperaba PARC, se obtuvo '"+tok.getText()+"' => {"+tok.getType()+"}";
+        }
+    }
+
+    function advanceReturn(i)
     {
         /*
          *  This method is used
          *  in final ways of the code.
          */
         if (i==1)
-            advance = true;
+            advs = true;
         else
-            advance = false;
-        return 1;
+            advs = false;
+        return tok.getText();
     }
-    public void Advance(bool adv)
+    function advance(adv)
     {
         /*
          *  This method is used
          *  to advance the token.
          */
-        tok = NextToken();
-        advance = adv;
+        tok = lex.nextToken();
+        advs = adv;
     }
 }
