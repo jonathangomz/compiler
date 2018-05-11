@@ -1,10 +1,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/3.10.0/math.min.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
-  <script src="https://wzrd.in/standalone/function-plot@1.14.0"></script>
-  <title>Document</title>
+  <title>Graph</title>
   <link 
     rel="stylesheet" 
     href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" 
@@ -23,7 +20,9 @@
         #result{
           text-align: center;
           float: none;
-          margin: 10px auto;
+        }
+        #res{
+            margin: 0px auto;
         }
     </style>
 </head>
@@ -31,35 +30,45 @@
   <div class="container">
     <div class="row">
       <div class="input-grou col-sm-8">
-          <input class="form-control" aria-label="With textarea" id="textfield"></input>
+          <input class="form-control" aria-label="With textarea" id="textfield"/>
       </div>
       <div class="col-sm-4" id="buttons">
           <button type="button" id="check" class="btn btn-info">Check</button>
           <button type="button" id="reset" class="btn btn-secondary">Reset</button>
       </div>
-      <div id="result" class="col-md-2 col-md-offset-5">
-      </div>
-  </div>
-  <div class="row">
-    <div class="col-md-2 col-md-offset-5">
-        <form id="form">
-          <label for="eq">Enter an equation:</label>
-          <input type="text" id="eq" value="4 * sin(x) + 5 * cos(x/2)" />
-          <input type="submit" value="Draw" />
-        </form>
-      </div>
-  </div>
-  <div class="row">
-    <div id="plot"></div>
+    </div>
+    <div class="row">
+      <form id="form" class="col-md-12">
+        <div class="row">
+            <div class="col-md-4">
+                <label for="eq">Enter an equation:</label>
+                <input type="text" class="form-control" id="eq" placeholder="Example: sin(9)" />
+            </div>
+            <div class="col-md-4">
+                <label for="result">Result:</label>
+                <input type="text" class="form-control" id="result" disabled />
+            </div>
+            </div>
+        <div class="row">
+            <div class="col-md-12" style="margin: auto;">
+                <input type="submit" value="Draw" />
+            </div>
+        </div>
+      </form>
+    </div>
+    <div class="row">
+      <div id="plot"></div>
+      <div id="res" class="col-md-2 col-md-offset-2"></div>
+    </div>
   </div>
 </body>
-<script
-    src="https://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/3.10.0/math.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+    <script src="https://wzrd.in/standalone/function-plot@1.14.0"></script>
 <script type="module">
 
-  import {TokenType, Token, Lexer, Parser, reservedWords} from './script/main.js';
+  import {Token, Lexer, Parser} from './script/main.js';
 
   let tok = undefined;
   let lex = Lexer("abc+(b-c)");
@@ -74,8 +83,8 @@
     $('#reset').click(function(){
         lex.reboot();
     });
-    $('#textfield').change(function(){
-      let val = document.getElementById('textfield').value;
+    $('#eq').change(function(){
+      let val = document.getElementById('eq').value;
       if(val.length > 0){
         lex = Lexer(val);
         listTokens = lex.listOfTokens();
@@ -86,14 +95,15 @@
                   </tr>`;
         let i = 0;
         listTokens.forEach(function(t){
-          str += "<tr><td>"+(++i)+"</td><td>"+t.getText()+"</td><td>"+t.getType()+"</td></tr>";
+          str += "<tr><td>"+(++i)+"</td><td>'"+t.getText()+"'</td><td>"+t.getType()+"</td></tr>";
         });
-        $('#result').find('table').text("");
-        $('#result').add('table').addClass("table table-sm").append(str);
-        
+        $('#res').text("");
+        $('#res').add('table').addClass("table table-sm").append(str);
+        console.log(str);
         par = Parser(val);
         var rs = par.tester();
         console.log(rs==undefined?"Error":"Done! Answer is: "+rs);
+        $('#result').val(rs);
       }
     });
   });
