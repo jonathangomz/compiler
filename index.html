@@ -29,15 +29,6 @@
 <body>
   <div class="container">
     <div class="row">
-      <div class="input-grou col-sm-8">
-          <input class="form-control" aria-label="With textarea" id="textfield"/>
-      </div>
-      <div class="col-sm-4" id="buttons">
-          <button type="button" id="check" class="btn btn-info">Check</button>
-          <button type="button" id="reset" class="btn btn-secondary">Reset</button>
-      </div>
-    </div>
-    <div class="row">
       <form id="form" class="col-md-12">
         <div class="row">
             <div class="col-md-4">
@@ -51,7 +42,7 @@
             </div>
         <div class="row">
             <div class="col-md-12" style="margin: auto;">
-                <input type="submit" value="Draw" />
+                <input type="submit" value="Draw" class="btn btn-info" />
             </div>
         </div>
       </form>
@@ -99,7 +90,6 @@
         });
         $('#res').text("");
         $('#res').add('table').addClass("table table-sm").append(str);
-        console.log(str);
         par = Parser(val);
         var rs = par.tester();
         console.log(rs==undefined?"Error":"Done! Answer is: "+rs);
