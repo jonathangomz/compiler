@@ -6,5 +6,5 @@ import Parser from './Parser.js';
 export {TokenType, Token, Lexer, Parser, reservedWords};
 
 const reservedWords = {
-  'sen': TokenType.SEN
+  'sin': TokenType.SEN
 }
