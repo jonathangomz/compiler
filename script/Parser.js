@@ -82,7 +82,7 @@ export default function Parser(input)
           return advanceReturn(1);
         if (constante()) // Si es NUM
           return tok.getText();
-        if (tok.getType() == 60 || tok.getType() == 61){ // Si es un paréntesis
+        if (tok.getType() == 60 || tok.getType() == 61){ // Si es Seno o Coseno
           let tokTemp = tok;
           advance(true);
           if(tok.getType() == 12){
@@ -97,11 +97,11 @@ export default function Parser(input)
           throw "Se esperaba ID || NUM se obtuvo '"+tok.getText()+"' => {"+tok.getType()+"}";
     }
 
-    function checkOp(op, val){
+    function checkOp(op, val1, val2 = 0){
       if (op.getType() == 60){
-        return Trigonometry().sin(val);
+        return Trigonometry().sin(val1);
       }else if(op.getType() == 61){
-        return Trigonometry().cos(val);
+        return Trigonometry().cos(val1);
       }else
         return null;
     }
