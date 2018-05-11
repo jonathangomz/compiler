@@ -232,7 +232,7 @@ export default function Lexer(foobar) {
                 i++;
                 edo = 0;
                 text = input.substring(index, i).trim();
-                tokenType = TokenType.NUM;
+                tokenType = TokenType.INT_CONST;
                 index = i;
                 return Token(tokenType, text);
             }

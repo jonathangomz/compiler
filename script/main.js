@@ -1,6 +1,9 @@
-import Lexer from './Lexer.js';
 import {TokenType} from './TokenType.js';
-export {reservedWords};
+import Token from './Token.js';
+import Lexer from './Lexer.js';
+import Parser from './Parser.js';
+
+export {TokenType, Token, Lexer, Parser, reservedWords};
 
 const reservedWords = {
   'sen': TokenType.SEN

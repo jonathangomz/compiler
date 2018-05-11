@@ -1,6 +1,9 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/3.10.0/math.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+  <script src="https://wzrd.in/standalone/function-plot@1.14.0"></script>
   <title>Document</title>
   <link 
     rel="stylesheet" 
@@ -27,16 +30,27 @@
 <body>
   <div class="container">
     <div class="row">
-        <div class="input-grou col-sm-8">
-          <textarea class="form-control" aria-label="With textarea" id="textfield"></textarea>
-        </div>
-        <div class="col-sm-4" id="buttons">
+      <div class="input-grou col-sm-8">
+          <input class="form-control" aria-label="With textarea" id="textfield"></input>
+      </div>
+      <div class="col-sm-4" id="buttons">
           <button type="button" id="check" class="btn btn-info">Check</button>
           <button type="button" id="reset" class="btn btn-secondary">Reset</button>
-        </div>
-        <div id="result" class="col-md-2 col-md-offset-5">
-        </div>
       </div>
+      <div id="result" class="col-md-2 col-md-offset-5">
+      </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2 col-md-offset-5">
+        <form id="form">
+          <label for="eq">Enter an equation:</label>
+          <input type="text" id="eq" value="4 * sin(x) + 5 * cos(x/2)" />
+          <input type="submit" value="Draw" />
+        </form>
+      </div>
+  </div>
+  <div class="row">
+    <div id="plot"></div>
   </div>
 </body>
 <script
@@ -45,12 +59,11 @@
     crossorigin="anonymous"></script>
 <script type="module">
 
-  import {TokenType} from './script/TokenType.js';
-  import Token from './script/Token.js';
-  import Lexer from './script/Lexer.js';
+  import {TokenType, Token, Lexer, Parser, reservedWords} from './script/main.js';
 
   let tok = undefined;
   let lex = Lexer("abc+(b-c)");
+  let par = Parser("abc+(b-c)");
   let listTokens = undefined; 
 
   $(document).ready(function(){
@@ -77,8 +90,37 @@
         });
         $('#result').find('table').text("");
         $('#result').add('table').addClass("table table-sm").append(str);
+        
+        par = Parser(val);
+        var rs = par.tester();
+        console.log(rs==undefined?"Error":"Done! Answer is: "+rs);
       }
     });
   });
+</script>
+<script type="text/javascript">
+  function draw() {
+    try {
+      functionPlot({
+        target: '#plot',
+        data: [{
+          fn: document.getElementById('eq').value,
+          sampler: 'builtIn',  // this will make function-plot use the evaluator of math.js
+          graphType: 'polyline'
+        }]
+      });
+    }
+    catch (err) {
+      console.log(err);
+      alert(err);
+    }
+  }
+
+  document.getElementById('form').onsubmit = function (event) {
+    event.preventDefault();
+    draw();
+  };
+
+  draw();
 </script>
 </html>
