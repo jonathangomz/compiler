@@ -1,8 +1,6 @@
 import Lexer from './Lexer.js';
 import Token from './Token.js';
-import {Add, Mul, Trigonometry} from './Math.js';
-
-import {reservedWords} from './main.js';
+import Op from './Operation.js';
 
 export default function Parser(input)
 {
@@ -47,7 +45,7 @@ export default function Parser(input)
                 const tokTemp = tok;
                 advance(false);
                 let r2 = factor();
-                r1 = Add(tokTemp, r1, r2);
+                r1 = Op(tokTemp, r1, r2);
             }
         } while(advs);
         // El primer método debe de llevar esto al final**
@@ -70,7 +68,7 @@ export default function Parser(input)
                 const tokTemp = tok;
                 advance(false);
                 let r2 = factor();
-                r1 = Mul(tokTemp, r1, r2)
+                r1 = Op(tokTemp, r1, r2)
             }
         } while (advs);
         return r1;
@@ -86,7 +84,7 @@ export default function Parser(input)
           let tokTemp = tok;
           advance(true);
           if(tok.getType() == 12){
-            let rs = checkOp(tokTemp, par())
+            let rs = Op(tokTemp, par())
             return rs;
           }else
             throw "Se esperaba PARA, se obtuvo '"+tok.getText()+"' => {"+tok.getType()+"}";
@@ -95,15 +93,6 @@ export default function Parser(input)
           return par();
         else
           throw "Se esperaba ID || NUM se obtuvo '"+tok.getText()+"' => {"+tok.getType()+"}";
-    }
-
-    function checkOp(op, val1, val2 = 0){
-      if (op.getType() == 60){
-        return Trigonometry().sin(val1);
-      }else if(op.getType() == 61){
-        return Trigonometry().cos(val1);
-      }else
-        return null;
     }
 
     function constante()
