@@ -4,7 +4,8 @@ import Lexer from './Lexer.js';
 import Parser from './Parser.js';
 
 const reservedWords = {
-  'sin': TokenType.SEN
+  'sin': TokenType.SEN,
+  'cos': TokenType.SEN
 }
 
 export {TokenType, Token, Lexer, Parser, reservedWords};

@@ -1,3 +1,4 @@
+import {TokenType} from './TokenType.js';
 import Lexer from './Lexer.js';
 import Token from './Token.js';
 import Op from './Operation.js';
@@ -19,12 +20,12 @@ export default function Parser(input)
         advance
     });
 
-/*
-         * * THE TESTER METHOD
-         
- * Description: This method is used to test all the program
- *              just is necessary change the method inside. 
- */
+  /*** THE TESTER METHOD
+   *
+   * This method is used to test all the program
+   * just is necessary change the method inside.
+   *
+   */
     function tester()
     {
         tok = lex.nextToken(); // Por mientras **
@@ -41,7 +42,7 @@ export default function Parser(input)
               r1 = termino();
             if (advs)
               advance(false);
-            if (tok.getType() == 3 || tok.getType() == 6){ //Suma y resta
+            if (tok.getType() == TokenType.SUM || tok.getType() == 6){ //Suma y resta
                 const tokTemp = tok;
                 advance(false);
                 let r2 = factor();
